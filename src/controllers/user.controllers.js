@@ -8,15 +8,15 @@ import { ApiResponse } from "../utils/Apiresponse.js";
 const registerUser = asynchandler(async (req,res)=>{
     //get user details
     
-    const {username, email, fullName, password } = req.body
+    const {userName, email, fullName, password } = req.body
 
     if (
-        [username, email, fullName, password].some((field)=>{field?.trim() === ""})
+        [userName, email, fullName, password].some((field)=>{field?.trim() === ""})
     ){
            throw new ApiError(400,"All fields is required")
     }
 
-    const existedUser= User.findOne({$or:[{username},{email}]})
+    const existedUser= await User.findOne({$or:[{userName},{email}]})
 
     if (existedUser) {
         throw new ApiError(409,"User with this email or username exists")
@@ -24,7 +24,11 @@ const registerUser = asynchandler(async (req,res)=>{
 
 
     const avatarLocalPath = req.files?.avatar[0]?.path;
-    const coverImageLocalPath = req.files?.coverImage[0]?.path;
+    // const coverImageLocalPath = req.files?.coverImage[0]?.path;
+    let coverImageLocalPath;
+    if (req.files && Array.isArray(req.files.coverImage) && req.files.coverImage.length > 0){
+        coverImageLocalPath = req.files.coverImage[0].path
+    }
 
 
     if (!avatarLocalPath) {
@@ -45,11 +49,11 @@ const registerUser = asynchandler(async (req,res)=>{
         coverImage: coverImage?.url || "",
         email,
         password,
-        username: username.toLowerCase()
+        userName: userName.toLowerCase(),
 
     })
 
-    const createdUser = await User.findById(_id).select(
+    const createdUser = await User.findById(user._id).select(
         "-password -refreshToken"
     )
 
