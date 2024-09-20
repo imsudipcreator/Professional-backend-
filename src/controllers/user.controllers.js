@@ -257,7 +257,7 @@ const changeCurrentPassword = asynchandler(async(req,res)=>{
 const getCurrentUser = asynchandler(async(req,res)=>{
     return res
     .status(200)
-    .json(200,req.user,"Current user fetched successfully ")
+    .json(new ApiResponse(200,req.user,"Current user fetched successfully "))
 })
 
 
@@ -311,9 +311,10 @@ const updateUserAvatar = asynchandler(async(req,res)=>{
 
     return res
     .status(200)
-    .json(200, user,"Avatar uploaded successfully")
+    .json(new ApiResponse(200, user,"Avatar uploaded successfully"))
 
 })
+
 const updateUserCoverImage = asynchandler(async(req,res)=>{
     const coverImageLocalPath= req.file?.path
 
@@ -341,10 +342,10 @@ const updateUserCoverImage = asynchandler(async(req,res)=>{
 
     return res
     .status(200)
-    .json(200, user,"Cover image uploaded successfully")
+    .json(new ApiResponse(200, user,"Cover image uploaded successfully"))
 })
 
 
 
-export {registerUser,loginUser,logoutUser,refreshAccessToken , changeCurrentPassword , getCurrentUser , updateAccountDetails, updateUserAvatar , updateUserCoverImage}
+export { registerUser ,loginUser , logoutUser ,refreshAccessToken , changeCurrentPassword , getCurrentUser , updateAccountDetails, updateUserAvatar , updateUserCoverImage}
 
